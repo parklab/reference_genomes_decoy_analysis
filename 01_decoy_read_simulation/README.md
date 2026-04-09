@@ -29,7 +29,7 @@ This script tries `conda install bioconda::art` first; if conda is unavailable i
 | Platform (`-ss`) | HSXn | Illumina HiSeq X |
 | Mode (`-p`) | paired-end | — |
 | Read length (`-l`) | 150 bp | — |
-| Coverage (`-f`) | 30× | — |
+| Coverage (`-f`) | 50× | — |
 | Insert size mean (`-m`) | 400 bp | — |
 | Insert size SD (`-s`) | 10 bp | — |
 

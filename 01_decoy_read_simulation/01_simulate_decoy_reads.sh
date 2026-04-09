@@ -120,7 +120,7 @@ for target in "${TARGETS[@]}"; do
         -i "${DECOY_FASTA[$target]}" \
         -p \
         -l 150 \
-        -f 30 \
+        -f 50 \
         -m 400 \
         -s 10 \
         -o "${DECOY_SIM_DIR}/${target}/simulated_${target}_reads"
