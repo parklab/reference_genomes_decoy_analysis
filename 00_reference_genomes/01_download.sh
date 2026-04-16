@@ -115,6 +115,46 @@ decompress_if_missing() {
     echo "Decompressed: $dest"
 }
 
+# Rename NC_ accession headers in the T2T FASTA to chr names in-place.
+# The NCBI GCF download uses RefSeq accessions (NC_060925.1 … NC_060948.1);
+# all downstream tools (GATK, BWA, dbSNP) expect chr1 … chrY.
+# Only runs if the first header is still an NC_ accession (idempotent).
+rename_t2t_headers() {
+    local fna=$1
+    if grep -q "^>chr1 " "$fna"; then
+        echo "T2T headers already renamed, skipping: $fna"
+        return
+    fi
+    echo "Renaming NC_ accessions to chr names in: $fna"
+    sed -i \
+        -e 's/^>NC_060925\.1 />chr1 /' \
+        -e 's/^>NC_060926\.1 />chr2 /' \
+        -e 's/^>NC_060927\.1 />chr3 /' \
+        -e 's/^>NC_060928\.1 />chr4 /' \
+        -e 's/^>NC_060929\.1 />chr5 /' \
+        -e 's/^>NC_060930\.1 />chr6 /' \
+        -e 's/^>NC_060931\.1 />chr7 /' \
+        -e 's/^>NC_060932\.1 />chr8 /' \
+        -e 's/^>NC_060933\.1 />chr9 /' \
+        -e 's/^>NC_060934\.1 />chr10 /' \
+        -e 's/^>NC_060935\.1 />chr11 /' \
+        -e 's/^>NC_060936\.1 />chr12 /' \
+        -e 's/^>NC_060937\.1 />chr13 /' \
+        -e 's/^>NC_060938\.1 />chr14 /' \
+        -e 's/^>NC_060939\.1 />chr15 /' \
+        -e 's/^>NC_060940\.1 />chr16 /' \
+        -e 's/^>NC_060941\.1 />chr17 /' \
+        -e 's/^>NC_060942\.1 />chr18 /' \
+        -e 's/^>NC_060943\.1 />chr19 /' \
+        -e 's/^>NC_060944\.1 />chr20 /' \
+        -e 's/^>NC_060945\.1 />chr21 /' \
+        -e 's/^>NC_060946\.1 />chr22 /' \
+        -e 's/^>NC_060947\.1 />chrX /' \
+        -e 's/^>NC_060948\.1 />chrY /' \
+        "$fna"
+    echo "Renamed: $fna"
+}
+
 # Create a relative softlink (target is just a filename, link is a full path).
 softlink_if_missing() {
     local link=$1      # full path to the symlink to create
@@ -196,6 +236,7 @@ download_if_missing \
     "${DIR_T2T}/GCF_009914755.1_T2T-CHM13v2.0_genomic.fna.gz" \
     "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/009/914/755/GCF_009914755.1_T2T-CHM13v2.0/GCF_009914755.1_T2T-CHM13v2.0_genomic.fna.gz"
 decompress_if_missing "${DIR_T2T}/GCF_009914755.1_T2T-CHM13v2.0_genomic.fna.gz"
+rename_t2t_headers   "${DIR_T2T}/GCF_009914755.1_T2T-CHM13v2.0_genomic.fna"
 softlink_if_missing \
     "${DIR_T2T}/t2t.fna" \
     "GCF_009914755.1_T2T-CHM13v2.0_genomic.fna"
